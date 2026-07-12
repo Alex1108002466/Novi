@@ -13,8 +13,6 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# CORS открыт полностью — для хакатона фронт может быть на любом localhost-порту.
-# Перед продом сузить allow_origins до конкретного домена.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

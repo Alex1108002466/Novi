@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
@@ -30,3 +31,5 @@ app.include_router(scenarios.router)
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")

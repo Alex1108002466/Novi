@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Номер аудитории — Novi</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style2.css" />
+</head>
+<body>
+
+  <div class="screen">
+
+    <div class="topbar">
+      <a href="choice2.html" class="topbar__back" aria-label="Назад">← Назад</a>
+      <span><a href="https://mi.university/" class="location-link">ММУ</a> · Корпус 1</span>
+    </div>
+
+    <div class="hero-mascot">
+
+      <svg class="mascot" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Novi, маскот-книга, машет рукой">
+        <g class="mascot__body">
+
+          <rect class="mascot__leg mascot__leg--left" x="34" y="122" width="12" height="18" rx="6" fill="var(--mascot-blue)"/>
+          <rect class="mascot__leg mascot__leg--right" x="74" y="122" width="12" height="18" rx="6" fill="var(--mascot-blue)"/>
+
+          <rect class="mascot__arm-left" x="4" y="66" width="30" height="12" rx="6" fill="var(--mascot-blue)"/>
+
+          <rect x="26" y="18" width="68" height="112" rx="14" fill="var(--mascot-blue)"/>
+          <rect x="82" y="18" width="12" height="112" rx="6" fill="#3E64DA"/>
+
+          <path d="M56 18H72V44L64 37L56 44V18Z" fill="var(--accent)"/>
+
+          <circle cx="48" cy="66" r="8" fill="white"/>
+          <circle cx="48" cy="67" r="3.4" fill="var(--ink)"/>
+          <circle cx="70" cy="66" r="8" fill="white"/>
+          <circle cx="70" cy="67" r="3.4" fill="var(--ink)"/>
+          <path d="M46 84C50 90 66 90 70 84" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+          <rect class="mascot__wave-arm" x="86" y="66" width="30" height="12" rx="6" fill="var(--mascot-blue)"/>
+        </g>
+      </svg>
+
+      <div class="bubble">Введи номер —<br/>покажу, где это!</div>
+
+    </div>
+
+    <p class="eyebrow">Поиск аудитории</p>
+    <h1>Номер<br/>аудитории</h1>
+    <p class="lede">Например: 102, 208, 300, 613</p>
+
+    <div class="search-box">
+      <input type="text" id="roomInput" class="room-input" placeholder="Номер" maxlength="4" autocomplete="off">
+      <button class="btn-search" onclick="searchRoom()">Найти →</button>
+    </div>
+
+    <!-- Результат поиска -->
+    <div id="searchResult" class="search-result hidden">
+      <div class="result-header">
+        <span class="result-label">Найдена аудитория</span>
+      </div>
+      <div class="result-content">
+        <div class="result-icon">🚪</div>
+        <div class="result-info">
+          <strong id="resultName">Аудитория —</strong>
+          <p id="resultLocation">—</p>
+        </div>
+      </div>
+      <button class="btn-build-route" onclick="buildRouteToRoom()">
+        Построить маршрут →
+      </button>
+    </div>
+
+    <!-- Частый поиск -->
+    <div class="frequent-search">
+      <p class="frequent-label">Часто ищут</p>
+      <div class="frequent-buttons">
+        <button class="freq-btn" onclick="quickSearch('102')">102</button>
+        <button class="freq-btn" onclick="quickSearch('208')">208</button>
+        <button class="freq-btn" onclick="quickSearch('300')">300</button>
+        <button class="freq-btn" onclick="quickSearch('316')">316</button>
+        <button class="freq-btn" onclick="quickSearch('348')">348</button>
+        <button class="freq-btn" onclick="quickSearch('415')">415</button>
+        <button class="freq-btn" onclick="quickSearch('517')">517</button>
+        <button class="freq-btn" onclick="quickSearch('601')">601</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+  </div>
+
+  <script src="js/rooms.js"></script>
+</body>
+</html>

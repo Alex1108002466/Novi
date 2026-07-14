@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MMU NOVI | Навигация</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style2.css">
+</head>
+<body class="map-body">
+
+  <header class="top-bar">
+    <button class="back-btn" onclick="window.location.href='index.html'">← Назад</button>
+    <div class="logo">ММУ</div>
+    <div class="breadcrumb">
+      <span>Московский международный университет</span>
+      <span class="sep">/</span>
+      <span id="breadcrumbDest">Маршрут</span>
+    </div>
+    <div class="novi-label">Novi · Навигатор</div>
+  </header>
+
+  <div class="floor-selector">
+    <div class="floor-title">
+      <h2>Откуда начинаем?</h2>
+      <p>Нажми на кабинет на карте</p>
+    </div>
+    <div class="floor-buttons">
+      <button class="floor-btn active" data-floor="1">1</button>
+      <button class="floor-btn" data-floor="2">2</button>
+      <button class="floor-btn" data-floor="3">3</button>
+      <button class="floor-btn" data-floor="4">4</button>
+      <button class="floor-btn" data-floor="5">5</button>
+      <button class="floor-btn" data-floor="6">6</button>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <div class="map-wrapper">
+      <div class="map-area">
+        <div id="floorMap" class="floor-map-container">
+          <div style="padding:40px;text-align:center;color:#64748b;">Загрузка карты...</div>
+        </div>
+        <div id="startMarker" class="map-marker start-marker hidden"></div>
+        <div id="finishMarker" class="map-marker finish-marker hidden"></div>
+      </div>
+      
+      <div id="selectionBar" class="selection-bar hidden">
+        <div class="selection-info">
+          <span class="selection-dot"></span>
+          <span id="selectionText">—</span>
+        </div>
+        <button class="btn-close" onclick="clearSelection()">×</button>
+        <button id="buildRouteBtn" class="btn-route">Маршрут →</button>
+      </div>
+      
+      <div class="map-legend">
+        <span><span class="legend-dot green"></span> Вы здесь</span>
+        <span><span class="legend-dot red"></span> Маршрут</span>
+        <span><span class="legend-dot yellow"></span> Назначение</span>
+        <span class="legend-note">· Нажмите на комнату чтобы выбрать</span>
+      </div>
+    </div>
+
+    <aside class="novi-sidebar">
+      <div class="novi-character">
+<div class="mascot-wrap mascot-wrap--small">
+      <svg class="mascot" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Novi, маскот-книга, машет рукой">
+        <g class="mascot__body">
+          <rect class="mascot__leg mascot__leg--left" x="34" y="122" width="12" height="18" rx="6" fill="var(--mascot-blue)"/>
+          <rect class="mascot__leg mascot__leg--right" x="74" y="122" width="12" height="18" rx="6" fill="var(--mascot-blue)"/>
+          <rect class="mascot__arm-left" x="4" y="66" width="30" height="12" rx="6" fill="var(--mascot-blue)"/>
+          <rect x="26" y="18" width="68" height="112" rx="14" fill="var(--mascot-blue)"/>
+          <rect x="82" y="18" width="12" height="112" rx="6" fill="#3E64DA"/>
+          <path d="M56 18H72V44L64 37L56 44V18Z" fill="var(--accent)"/>
+          <circle cx="48" cy="66" r="8" fill="white"/>
+          <circle cx="48" cy="67" r="3.4" fill="var(--ink)"/>
+          <circle cx="70" cy="66" r="8" fill="white"/>
+          <circle cx="70" cy="67" r="3.4" fill="var(--ink)"/>
+          <path d="M46 84C50 90 66 90 70 84" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <rect class="mascot__wave-arm" x="86" y="66" width="30" height="12" rx="6" fill="var(--mascot-blue)"/>
+        </g>
+      </svg>
+        </div>
+      </div>
+
+      <div class="speech-bubble">
+        <p id="noviMessage">Нажми на кабинет — построю маршрут!</p>
+      </div>
+
+      <div id="destCard" class="info-card dest-card">
+        <div class="card-label">КУДА ИДЁМ</div>
+        <div class="card-row">
+          <span id="destIcon" class="card-emoji">📍</span>
+          <div>
+            <strong id="destName">—</strong>
+            <p id="destFloorInfo">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="startCard" class="info-card start-card hidden">
+        <div class="card-label green-label">ОТКУДА</div>
+        <div class="card-row">
+          <span class="card-emoji">📍</span>
+          <div>
+            <strong id="startName">—</strong>
+            <p id="startFloorInfo">—</p>
+          </div>
+        </div>
+        <button id="changeStart" class="btn-change">✕ Изменить</button>
+      </div>
+
+      <div class="info-card quick-panel">
+        <h4>Быстрый выбор:</h4>
+        <button class="quick-btn" onclick="selectStartPoint('START', 'Главный вход', 1)">
+          <span class="btn-icon">🚪</span> Главный вход
+        </button>
+        <button class="quick-btn" onclick="selectStartPoint('101', 'Атриум', 1)">
+          <span class="btn-icon">🏛️</span> Атриум
+        </button>
+        <button class="quick-btn" onclick="selectStartPoint('STAIR1_1', 'Лестница №1', 1)">
+          <span class="btn-icon">🪜</span> Лестница №1
+        </button>
+        <button class="quick-btn" onclick="selectStartPoint('STAIR1_4', 'Лестница №4', 1)">
+          <span class="btn-icon"></span> Лестница №4
+        </button>
+      </div>
+
+      <div id="routePanel" class="info-card route-panel hidden">
+        <div class="route-header">
+          <span class="route-label">ТЕКУЩИЙ ШАГ</span>
+        </div>
+        <p id="routeStep" class="route-step-text">—</p>
+        
+        <div class="route-list" id="routeList"></div>
+
+        <div class="route-actions">
+          <button id="completeStep" class="btn-action primary">Я выполнил этот шаг →</button>
+          <button id="rebuildRoute" class="btn-action">Перестроить маршрут</button>
+          <a href="index.html" class="btn-link">← Вернуться в меню</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div id="completionScreen" class="completion-screen hidden">
+    <div class="completion-content">
+      <div class="novi-celebration">
+<div class="mascot-wrap mascot-wrap--celebrate">
+      <svg class="mascot mascot--celebrate" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Novi, маскот-книга, прыгает и радуется двумя руками">
+        <g class="mascot__body">
+          <rect class="mascot__leg mascot__leg--left" x="34" y="122" width="12" height="18" rx="6" fill="var(--mascot-blue)"/>
+          <rect class="mascot__leg mascot__leg--right" x="74" y="122" width="12" height="18" rx="6" fill="var(--mascot-blue)"/>
+          <rect class="mascot__wave-arm mascot__wave-arm--left" x="4" y="66" width="30" height="12" rx="6" fill="var(--mascot-blue)"/>
+          <rect x="26" y="18" width="68" height="112" rx="14" fill="var(--mascot-blue)"/>
+          <rect x="82" y="18" width="12" height="112" rx="6" fill="#3E64DA"/>
+          <path d="M56 18H72V44L64 37L56 44V18Z" fill="var(--accent)"/>
+          <circle cx="48" cy="66" r="8" fill="white"/>
+          <circle cx="48" cy="67" r="3.4" fill="var(--ink)"/>
+          <circle cx="70" cy="66" r="8" fill="white"/>
+          <circle cx="70" cy="67" r="3.4" fill="var(--ink)"/>
+          <path d="M45 82C50 92 66 92 71 82" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <rect class="mascot__wave-arm mascot__wave-arm--right" x="86" y="66" width="30" height="12" rx="6" fill="var(--mascot-blue)"/>
+        </g>
+      </svg>
+        </div>
+        <div class="celebration-badge">
+          <span>МАРШРУТ ЗАВЕРШЁН</span>
+        </div>
+      </div>
+      
+      <h1 class="completion-title">Поздравляю!</h1>
+      <p class="completion-text">
+        Ты нашёл <span id="foundPlace" class="found-place">место</span>!
+      </p>
+      
+      <div class="completion-buttons">
+        <button id="findAnotherBtn" class="btn-completion primary">Найти другое место</button>
+        <a href="index.html" class="btn-completion">На главную</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="mapLoader" class="map-loader hidden">
+    <div class="loader-circle"></div>
+    <h3>Загрузка...</h3>
+  </div>
+
+     <script src="js/route.js"></script>
+</body>
+</html>

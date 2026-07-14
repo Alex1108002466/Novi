@@ -1,0 +1,471 @@
+/* =========================================================
+   Novi — дизайн-система (первые экраны)
+   Токены подобраны под предмет: цифровой гид-навигатор по кампусу.
+   Синий — уже установленный цвет маскота Novi (из брифа хакатона).
+   Жёлтый — цвет закладки маскота, он же акцент для "найти путь".
+   Тил — второй акцент, только для "экскурсии" (различать 2 сценария).
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+:root {
+  /* Цвет */
+  --ink: #14162B;
+  --ink-soft: #4A4B60;
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --line: #E5E2D8;
+
+  --mascot-blue: #4C79F4;
+  --mascot-blue-dark: #2F55C9;
+
+  --accent: #FFC94A;       /* найти путь */
+  --accent-ink: #4A3A08;
+
+  --accent-2: #1F8A73;     /* экскурсия */
+  --accent-2-soft: #E4F3EF;
+
+  /* Типографика */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Форма */
+  --radius-card: 20px;
+  --radius-btn: 16px;
+
+  --shadow-soft: 0 1px 2px rgba(20, 22, 43, 0.04), 0 8px 24px rgba(20, 22, 43, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Экран рассчитан на мобильный кадр, но не заперт в нём —
+   на широких экранах контент центрируется в узкой колонке,
+   как будто это витрина телефона на витрине. */
+.screen {
+  max-width: 460px;
+  margin: 0 auto;
+  min-height: 100svh;
+  padding: max(20px, env(safe-area-inset-top)) 20px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: inherit; }
+
+button { font: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--mascot-blue-dark);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* ---------- Топбар ---------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-bottom: 28px;
+}
+
+.topbar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 600;
+  padding: 6px 4px;
+}
+
+/* ---------- Маскот: по центру, прыгает и машет рукой ---------- */
+
+.hero-mascot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mascot {
+  width: 132px;
+  height: auto;
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mascot__body {
+    animation: mascot-jump 2.1s infinite;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35);
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+
+  .mascot__wave-arm {
+    animation: mascot-wave 2.1s ease-out infinite;
+    transform-box: fill-box;
+    transform-origin: 0% 50%;
+  }
+
+  .mascot__leg--left {
+    animation: mascot-leg-left 2.1s infinite;
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+  }
+
+  .mascot__leg--right {
+    animation: mascot-leg-right 2.1s infinite;
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+  }
+}
+
+/* Резкий мультяшный прыжок: приседание -> быстрый рывок вверх -> короткое
+   зависание -> жёсткое приземление со сплющиванием -> пауза перед повтором.
+   Своя timing-function на каждом кадре — рывок быстрый, зависание линейное,
+   падение ускоряющееся, а не единая сглаженная синусоида. */
+@keyframes mascot-jump {
+  0%        { transform: translateY(0) scaleY(1); animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35); }
+  8%        { transform: translateY(5px) scaleY(0.82); animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+  24%       { transform: translateY(-20px) scaleY(1.08); animation-timing-function: linear; }
+  38%       { transform: translateY(-18px) scaleY(1.02); animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0); }
+  54%       { transform: translateY(0) scaleY(0.86); animation-timing-function: ease-out; }
+  64%       { transform: translateY(0) scaleY(1.03); animation-timing-function: ease-out; }
+  72%, 100% { transform: translateY(0) scaleY(1); }
+}
+
+/* Взмах начинается сразу на подъёме (~8–24%), а не в верхней точке */
+@keyframes mascot-wave {
+  0%, 6%, 66%, 100% { transform: rotate(45deg); }
+  12% { transform: rotate(-50deg); }
+  18% { transform: rotate(12deg); }
+  24% { transform: rotate(-30deg); }
+  30% { transform: rotate(6deg); }
+  36% { transform: rotate(20deg); }
+}
+
+/* Ноги слегка раздвигаются в момент прыжка и сходятся при приземлении */
+@keyframes mascot-leg-left {
+  0%, 6%, 66%, 100% { transform: translateX(0) rotate(0deg); }
+  24% { transform: translateX(-6px) rotate(10deg); }
+  54% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes mascot-leg-right {
+  0%, 6%, 66%, 100% { transform: translateX(0) rotate(0deg); }
+  24% { transform: translateX(6px) rotate(-10deg); }
+  54% { transform: translateX(0) rotate(0deg); }
+}
+
+.mascot__arm-left {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;  /* точка крепления к телу — правый край руки */
+  transform: rotate(-45deg);   /* минус = свободный конец опускается вниз */
+}
+
+/* ---------- Маскот-версия "радуется": обе руки подняты вверх ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .mascot--celebrate .mascot__wave-arm--left {
+    animation: mascot-wave-left 2.1s ease-out infinite;
+    transform-box: fill-box;
+    transform-origin: 100% 50%;
+  }
+
+  .mascot--celebrate .mascot__wave-arm--right {
+    animation: mascot-wave 2.1s ease-out infinite;
+    transform-box: fill-box;
+    transform-origin: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot--celebrate .mascot__wave-arm--left { transform: rotate(-225deg); }
+  .mascot--celebrate .mascot__wave-arm--right { transform: rotate(45deg); }
+}
+
+/* Зеркальное отражение mascot-wave для левой руки (крепление с другой стороны) */
+@keyframes mascot-wave-left {
+  0%, 6%, 66%, 100% { transform: rotate(225deg); }
+  12% { transform: rotate(320deg); }
+  18% { transform: rotate(258deg); }
+  24% { transform: rotate(300deg); }
+  30% { transform: rotate(264deg); }
+  36% { transform: rotate(250deg); }
+}
+
+/* ---------- Пунктирный маршрут — сквозной сигнатурный элемент ---------- */
+
+.route-line {
+  width: 2px;
+  flex: 1;
+  min-height: 28px;
+  margin: 10px 0;
+  background-image: linear-gradient(var(--line) 55%, transparent 0%);
+  background-position: left;
+  background-size: 2px 12px;
+  background-repeat: repeat-y;
+}
+
+.route-line--short {
+  min-height: 16px;
+  margin-top: 4px;
+}
+
+.route-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mascot-blue);
+}
+
+/* ---------- Тег-форма (сигнатурная фигура: бирка навигатора) ----------
+   Форма позаимствована у указателей/бирок на плане этажа: прямоугольник
+   со срезанным левым краем и "проушиной" — как физическая табличка,
+   которую вешают на дверь кабинета. Используется для главной кнопки
+   и для карточек выбора на втором экране. */
+
+.tag {
+  --tag-notch: 22px;
+  position: relative;
+  border-radius: 10px 0 0 10px;
+  clip-path: polygon(
+    0% 0%, calc(100% - var(--tag-notch)) 0%, 100% 50%, calc(100% - var(--tag-notch)) 100%, 0% 100%
+  );
+  padding-right: calc(var(--tag-notch) + 14px);
+}
+
+/* ---------- Кнопки ---------- */
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  gap: 12px;
+  width: 100%;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  padding: 18px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(20,22,43,0.05), 0 14px 28px rgba(20,22,43,0.09);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary__arrow {
+  position: absolute;
+  right: calc(var(--tag-notch, 22px) + 20px);
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ---------- Типографика контента ---------- */
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mascot-blue-dark);
+  margin: 0 0 10px;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+}
+
+.lede {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 34ch;
+}
+
+/* ---------- Речевой пузырь маскота ---------- */
+
+.bubble {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  border-top-left-radius: 4px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-soft);
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+/* ---------- Индикатор шагов ---------- */
+
+.step-indicator {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.step-indicator__dot {
+  width: 22px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.step-indicator__dot--active {
+  background: var(--mascot-blue);
+}
+
+/* ---------- Карточки выбора (экран 2) ---------- */
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.choice-card {
+  display: block;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  padding: 22px 22px 20px 30px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.choice-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(20,22,43,0.05), 0 16px 32px rgba(20,22,43,0.10);
+}
+
+.choice-card:hover .choice-card__arrow {
+  transform: translateX(3px);
+}
+
+.choice-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+
+.choice-card--path::before { background: var(--accent); }
+.choice-card--tour::before { background: var(--accent-2); }
+
+.choice-card__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 100px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.choice-card--path .choice-card__label { background: #FFF3D6; color: var(--accent-ink); }
+.choice-card--tour .choice-card__label { background: var(--accent-2-soft); color: var(--accent-2); }
+
+.choice-card__title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.choice-card__desc {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 32ch;
+}
+
+.choice-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.choice-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.choice-card__arrow {
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-soft);
+  transition: transform 0.15s ease;
+}
+
+.choice-card--path .choice-card__arrow { color: var(--accent-ink); }
+.choice-card--tour .choice-card__arrow { color: var(--accent-2); }
+
+/* ---------- Footer / spacer ---------- */
+
+.spacer { flex: 1; }
+
+.hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 18px;
+}
+
+.location-link {
+    color: inherit;
+    text-decoration: none;
+}

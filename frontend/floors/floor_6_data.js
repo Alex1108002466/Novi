@@ -1,0 +1,76 @@
+window.FLOORS = window.FLOORS || {};
+
+window.FLOORS[6] = {
+  rooms: [
+    { id: "ELEV_3", label: "Лифт 3", shape: "rect", x: 380, y: 450, w: 90, h: 50, door: { x: 380, y: 475 } },
+    { id: "ELEV_4", label: "Лифт 4", shape: "rect", x: 780, y: 450, w: 90, h: 50, door: { x: 870, y: 475 } },
+
+    { id: "STAIR_5", label: "5", type: "stairs", shape: "rect", x: 380, y: 550, w: 90, h: 110, door: { x: 425, y: 550 } },
+    { id: "STAIR_6", label: "6", type: "stairs", shape: "rect", x: 780, y: 550, w: 90, h: 110, door: { x: 825, y: 550 } },
+    { id: "STAIR_9", label: "9", type: "stairs", shape: "rect", x: 0, y: 470, w: 100, h: 80, door: { x: 100, y: 520 } },
+    { id: "STAIR_10", label: "10", type: "stairs", shape: "rect", x: 1000, y: 205, w: 75, h: 40, door: { x: 1075, y: 225 } },
+
+    { id: "1", label: "М/Ж", shape: "rect", x: 0, y: 420, w: 100, h: 50, door: { x: 100, y: 445 } },
+    { id: "2", label: "618", shape: "rect", x: 915, y: 410, w: 160, h: 65, door: { x: 1000, y: 475 } },
+    { id: "3", label: "606", shape: "rect", x: 50, y: 550, w: 110, h: 80, door: { x: 130, y: 550 } },
+    { id: "4", label: "607", shape: "rect", x: 160, y: 550, w: 220, h: 80, door: { x: 290, y: 550 } },
+    { id: "5", label: "", shape: "rect", x: 380, y: 410, w: 90, h: 40, door: { x: 380, y: 430 } },
+    { id: "6", label: "", shape: "rect", x: 780, y: 410, w: 90, h: 40, door: { x: 870, y: 430 } },
+    { id: "7", label: "601", shape: "rect", x: 160, y: 410, w: 175, h: 90, door: { x: 250, y: 500 } },
+    { id: "8", label: "603", shape: "rect", x: 40, y: 355, w: 60, h: 65, door: { x: 100, y: 395 } },
+    { id: "9", label: "602", shape: "rect", x: 40, y: 290, w: 180, h: 65, door: { x: 130, y: 355 } },
+    { id: "10", label: "610", shape: "rect", x: 870, y: 530, w: 180, h: 100, door: { x: 910, y: 530 } },
+    { id: "11", label: "611", shape: "rect", x: 1050, y: 530, w: 200, h: 100, door: { x: 1095, y: 530 } },
+    { id: "12", label: "612", shape: "rect", x: 1120, y: 280, w: 130, h: 190, door: { x: 1120, y: 330 } },
+    { id: "13", label: "613", shape: "rect", x: 1120, y: 190, w: 130, h: 90, door: { x: 1120, y: 225 } },
+    { id: "14", label: "617", shape: "rect", x: 1025, y: 355, w: 50, h: 55, door: { x: 1075, y: 380 } },
+    { id: "15", label: "616", shape: "rect", x: 1025, y: 300, w: 50, h: 55, door: { x: 1075, y: 330 } },
+    { id: "16", label: "М/Ж", shape: "rect", x: 1025, y: 245, w: 50, h: 55, door: { x: 1075, y: 270 } },
+  ],
+  corridor: {
+    nodes: [
+      { id: "n1", x: 130, y: 395 },
+      { id: "n2", x: 130, y: 445 },
+      { id: "n3", x: 130, y: 520 },
+      { id: "n4", x: 250, y: 520 },
+      { id: "n5", x: 290, y: 520 },
+      { id: "n6", x: 355, y: 520 },
+      { id: "n7", x: 355, y: 475 },
+      { id: "n8", x: 355, y: 430 },
+      { id: "n9", x: 425, y: 520 },
+//--------------------------------------
+      { id: "n10", x: 825, y: 520 },
+      { id: "n11", x: 890, y: 500 },
+      { id: "n12", x: 890, y: 475 },
+      { id: "n13", x: 890, y: 430 },
+      { id: "n14", x: 910, y: 500 },
+      { id: "n15", x: 1000, y: 500 },
+      { id: "n16", x: 1095, y: 500 },
+      { id: "n17", x: 1095, y: 380 },
+      { id: "n18", x: 1095, y: 330 },
+      { id: "n19", x: 1095, y: 270 },
+      { id: "n20", x: 1095, y: 225 },
+    ],
+    edges: [
+      ["n1", "n2"],
+      ["n2", "n3"],
+      ["n3", "n4"],
+      ["n4", "n5"],
+      ["n5", "n6"],
+      ["n6", "n7"],
+      ["n7", "n8"],
+      ["n6", "n9"],
+//--------------------------------------
+      ["n10", "n11"],
+      ["n11", "n12"],
+      ["n12", "n13"],
+      ["n11", "n14"],
+      ["n14", "n15"],
+      ["n15", "n16"],
+      ["n16", "n17"],
+      ["n17", "n18"],
+      ["n18", "n19"],
+      ["n19", "n20"],
+    ]
+  }
+};

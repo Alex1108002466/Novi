@@ -294,6 +294,41 @@ button { font: inherit; }
   line-height: 1;
 }
 
+/* Вторичная кнопка той же "бирочной" формы — для второстепенного
+   действия рядом с основной (например "Назад к карте" рядом с
+   "На главную") — обводка вместо заливки, без тени и стрелки. */
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  padding: 18px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--mascot-blue);
+  color: var(--mascot-blue-dark);
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-row .btn-primary,
+.btn-row .btn-secondary {
+  flex: 1;
+}
+
 /* ---------- Типографика контента ---------- */
 
 .eyebrow {
@@ -468,4 +503,266 @@ h1 {
 .location-link {
     color: inherit;
     text-decoration: none;
+}
+/* ---------- Сетка выбора места назначения (мобильная версия, экран choice2) ---------- */
+
+.dest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.dest-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 14px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.dest-tile:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) {
+  .dest-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(20,22,43,0.05), 0 14px 28px rgba(20,22,43,0.09);
+  }
+}
+
+.dest-tile__emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.dest-tile__title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dest-tile__meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.dest-tile--highlight {
+  background: #FFF3D6;
+  border-color: var(--accent);
+}
+
+/* ---------- Поиск аудитории (мобильная версия, экран rooms.html) ---------- */
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.room-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.room-input::placeholder {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.room-input:focus {
+  border-color: var(--mascot-blue);
+  box-shadow: 0 0 0 3px rgba(76, 121, 244, 0.15);
+}
+
+.btn-search {
+  flex: 0 0 auto;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 20px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease;
+}
+
+.btn-search:active { transform: scale(0.97); }
+
+/* Результат поиска */
+.search-result {
+  margin-top: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+}
+
+.result-header { margin-bottom: 14px; }
+
+.result-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mascot-blue-dark);
+}
+
+.result-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.result-icon { font-size: 34px; }
+
+.result-info strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+.result-info p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.btn-build-route {
+  width: 100%;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.btn-build-route:active { transform: scale(0.98); }
+
+/* Частый поиск */
+.frequent-search { margin-top: 26px; }
+
+.frequent-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.frequent-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.freq-btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.freq-btn:active { transform: scale(0.96); }
+
+@media (hover: hover) {
+  .freq-btn:hover {
+    border-color: var(--mascot-blue);
+    color: var(--mascot-blue-dark);
+  }
+}
+
+/* ---------- Переключатель этажей (экран карты) ---------- */
+
+.floor-switch {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin: 22px 0 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.floor-switch__btn {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.floor-switch__btn--active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+.map-placeholder {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 70%; /* 700 / 1000 = 0.7 — держит пропорции viewBox 1000x700 в любом браузере */
+  border: 2px dashed var(--mascot-blue);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  overflow: hidden;
+  text-align: center;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.map-placeholder > .floor-svg,
+.map-placeholder > .map-placeholder--loading {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
 }

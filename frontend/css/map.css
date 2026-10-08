@@ -1,286 +1,356 @@
-/* ---------- Верхний бар с выбором этажа ---------- */
+/* ---------- Ручной выбор старта/финиша + шаги маршрута ---------- */
 
-.map-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: max(16px, env(safe-area-inset-top)) 16px 12px;
-}
-
-.map-topbar__back {
-  text-decoration: none;
-  color: var(--ink);
-  font-weight: 600;
-  font-family: var(--font-mono);
-  font-size: 13px;
-}
-
-.map-topbar__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.floor-tabs {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 0 16px 14px;
-  -webkit-overflow-scrolling: touch;
-}
-
-.floor-pill {
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink-soft);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.floor-pill--active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: white;
-}
-
-.floor-title {
-  padding: 0 16px 10px;
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-}
-
-/* ---------- Область карты ---------- */
-
-.map-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 16px 4px;
-}
-
-.map-scroll__hint {
-  text-align: center;
-  font-size: 12px;
-  color: var(--ink-soft);
-  padding: 0 16px 10px;
-}
-
-.map-stage {
-  position: relative;
-  min-width: 600px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-}
-
-.map-grid {
-  display: grid;
-  gap: 6px;
-  padding: 14px;
-  /* фон между ячейками — визуально это и есть "коридор" */
-  background: var(--line);
-  border-radius: var(--radius-card);
-}
-
-.map-grid--clusters {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background: transparent;
-  padding: 14px;
-}
-
-.route-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.route-path {
-  fill: none;
-  stroke: var(--mascot-blue);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 2 10;
-  animation: route-flow 1s linear infinite;
-}
-
-@keyframes route-flow {
-  to { stroke-dashoffset: -24; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .route-path { animation: none; }
-}
-
-.route-dot { stroke: white; stroke-width: 2; }
-.route-dot--start { fill: var(--accent-2); }
-.route-dot--dest { fill: var(--accent); }
-
-/* ---------- Комнаты ---------- */
-
-.room {
-  border: none;
-  border-radius: 8px;
-  background: var(--ink);
-  color: white;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  cursor: pointer;
-  padding: 4px;
-  text-align: center;
-  line-height: 1.2;
-  transition: background 0.15s ease, transform 0.1s ease;
-}
-
-.room:hover { background: var(--mascot-blue); }
-.room:active { transform: scale(0.96); }
-
-.room__sub {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 10px;
-  opacity: 0.8;
-}
-
-.room--hall {
-  background: var(--mascot-blue-dark);
-  border-radius: 50% / 60%;
-  font-size: 15px;
-  cursor: default;
-}
-
-.room--hall:hover { background: var(--mascot-blue-dark); }
-
-.room--entrance { background: var(--accent-2); }
-.room--entrance:hover { background: #176e5c; }
-
-.room--lift, .room--wc {
-  background: #EDEBE3;
-  color: var(--ink-soft);
-  border: 1px solid var(--line);
-}
-
-.room--lift:hover, .room--wc:hover {
-  background: #E2DED0;
-}
-
-.room--special { background: var(--mascot-blue-dark); }
-
-.room--start {
-  background: var(--accent-2) !important;
-  color: white !important;
-}
-
-.room--dest {
-  background: var(--accent) !important;
-  color: var(--accent-ink) !important;
-}
-
-/* ---------- Кластеры (этажи без общего холла) ---------- */
-
-.cluster__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ink-soft);
-  margin-bottom: 8px;
-}
-
-.cluster__rooms {
+.route-manual {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 14px;
 }
 
-.cluster__rooms .room {
-  width: 96px;
-  height: 64px;
+.route-manual__field {
+  flex: 1 1 160px;
+  min-width: 140px;
 }
 
-/* ---------- Нижняя панель выбора ---------- */
+.route-manual__input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
 
-.selection-bar {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: max(16px, env(safe-area-inset-bottom));
-  background: var(--ink);
-  color: white;
-  border-radius: var(--radius-card);
-  padding: 14px 16px;
+.route-manual__input:focus {
+  outline: none;
+  border-color: var(--mascot-blue);
+}
+
+/* поле подсвечиваем, если введённый текст не совпал ни с одним кабинетом —
+   сразу видно, что выбор ещё не "принят" (см. .is-invalid в map.js) */
+.route-manual__input.is-invalid {
+  border-color: var(--accent);
+}
+
+.route-manual__btn {
+  border: 1px solid var(--line);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.route-manual__btn:hover { opacity: 0.85; }
+
+.route-manual__btn--ghost {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* "Завершить" — неактивна, пока маршрут не построен или не пройден
+   до последнего шага (см. updateFinishButtonState в map.js) */
+.route-manual__btn:disabled,
+.route-manual__btn--disabled {
+  background: var(--bg);
+  color: var(--ink-soft);
+  border-color: var(--line);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.route-manual__btn:disabled:hover,
+.route-manual__btn--disabled:hover {
+  opacity: 0.6;
+}
+
+.route-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.route-controls__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  box-shadow: 0 8px 24px rgba(20,22,43,0.25);
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  gap: 10px;
 }
 
-.selection-bar--hidden {
-  transform: translateY(120%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.selection-bar__text {
+.route-controls__instruction {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
   font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink);
+  text-align: center;
+}
+
+.route-controls button {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-mono);
   font-weight: 600;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.route-controls__label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
   flex: 1;
 }
 
-.selection-bar__stats {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: rgba(255,255,255,0.7);
-  white-space: nowrap;
+/* ---------- Содержимое площадки карты (заполняется файлами из /floors) ---------- */
+
+.floor-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-.selection-bar__arrive {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 13px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  flex: 0 0 auto;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-
-.selection-bar__arrive--hidden {
-  display: none;
-}
-
-.selection-bar__close {
-  border: none;
-  background: rgba(255,255,255,0.12);
-  color: white;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  font-size: 16px;
+.room {
+  fill: var(--ink);
+  stroke: var(--bg);
+  stroke-width: 3;
   cursor: pointer;
-  flex: 0 0 auto;
+  transition: fill 0.15s ease;
+}
+
+.room:hover { fill: var(--mascot-blue); }
+.room.is-start { fill: var(--accent-2); }
+.room.is-dest  { fill: var(--accent); }
+
+/* Лестница — отдельный цвет + значок ступенек, чтобы отличалась с первого взгляда */
+/* Кабинет-"рамка" (прямоугольник с отверстием): клик и наведение ловятся
+   невидимым элементом на всю площадь, включая дырку — подсветка вешается
+   через родительскую группу .room-group, поэтому срабатывает при наведении
+   на любую часть фигуры независимо от порядка отрисовки внутри группы */
+.frame-hit-area {
+  cursor: pointer;
+}
+.room-group:hover .room {
+  fill: var(--mascot-blue);
+}
+
+.room--stairs {
+  fill: #8B8FA3;
+}
+.room--stairs:hover { fill: var(--mascot-blue); }
+
+.stairs-icon {
+  stroke: white;
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+  pointer-events: none;
+}
+
+.room-label {
+  fill: white;
+  font-weight: 700;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* Нестандартные формы (атриум и т.п.) — path/polygon вместо rect */
+.atrium {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  cursor: pointer;
+}
+
+.atrium-label {
+  fill: var(--ink);
+  font-weight: 700;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* Граф коридора — опорные точки под линию маршрута, пользователю не видны.
+   Видимость всех точек графа (в т.ч. дверей) переключается разом через
+   класс debug-points на #mapStage — см. SHOW_GRAPH_POINTS в map.js.
+   Размер/цвет точек — через window.GRAPH_POINT_RADIUS / GRAPH_POINT_COLOR /
+   GRAPH_DOOR_COLOR в floor-N-data.js (см. рядом с window.MAP_FONT). */
+.corridor-node {
+  fill: var(--graph-point-color, var(--ink-soft));
+  opacity: 0;
+  r: var(--graph-point-radius, 4);
+}
+
+.corridor-edge {
+  stroke: var(--graph-point-color, var(--ink-soft));
+  stroke-width: 1;
+  opacity: 0;
+}
+
+/* Точка-дверь кабинета (room.door) — своя точка коридора для маршрута */
+.door-node {
+  fill: var(--graph-door-color, var(--mascot-blue));
+  opacity: 0;
+  r: var(--graph-point-radius, 4);
+}
+
+.door-edge {
+  stroke: var(--graph-door-color, var(--mascot-blue));
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0;
+}
+
+/* дверь физически есть на карте, но исключена из маршрута (room.blockedDoors) —
+   в debug-режиме красная, без линии-связи к коридору (связи и нет в графе) */
+.door-node--blocked {
+  fill: #ff3b3b;
+}
+
+.debug-points .corridor-node,
+.debug-points .corridor-edge,
+.debug-points .door-node,
+.debug-points .door-edge {
+  opacity: 1;
+}
+
+/* Найденный кратчайший маршрут (Дейкстра) — виден всегда, не только
+   в debug-режиме, это уже пользовательская фича, а не служебные точки */
+.route-path {
+  fill: none;
+  stroke: var(--route-color, var(--accent));
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.map-placeholder--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* ---------- Всплывающее окошко про кабинет ---------- */
+
+.room-popup {
+  position: fixed;
+  z-index: 1000;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-soft);
+  min-width: 160px;
+  max-width: 220px;
+  text-align: center;
+}
+
+.room-popup::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+}
+
+/* попап над кабинетом — стрелка снизу, смотрит вниз на кабинет */
+.room-popup--top::after {
+  left: 50%;
+  bottom: -7px;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* попап под кабинетом — стрелка сверху, смотрит вверх на кабинет */
+.room-popup--bottom::after {
+  left: 50%;
+  top: -7px;
+  transform: translateX(-50%) rotate(45deg);
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+}
+
+/* попап справа от кабинета — стрелка слева, смотрит на кабинет */
+.room-popup--right::after {
+  top: 50%;
+  left: -7px;
+  transform: translateY(-50%) rotate(45deg);
+  border-bottom: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+/* попап слева от кабинета — стрелка справа, смотрит на кабинет */
+.room-popup--left::after {
+  top: 50%;
+  right: -7px;
+  transform: translateY(-50%) rotate(45deg);
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.room-popup__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.room-popup__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.room-popup__btn {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.room-popup__btn:hover {
+  border-color: var(--mascot-blue);
+  color: var(--mascot-blue-dark);
+}
+
+.room-popup__btn--start.is-active {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: white;
+}
+
+.room-popup__btn--dest.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }

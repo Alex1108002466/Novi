@@ -30,11 +30,6 @@
 
     <div id="mapStage" class="map-placeholder"></div>
 
-    <!-- Ручной выбор старта/финиша — синхронизирован с кликами по карте:
-         выбрал кабинет кликом — тут же появится в нужном поле, и наоборот.
-         Вместо выпадающего списка — обычное поле ввода с подсказками
-         (<datalist>): начинаешь набирать номер/название, браузер сам
-         показывает совпадающие кабинеты по всем этажам. -->
     <div class="route-manual">
       <div class="route-manual__field">
         <input type="text" id="startInput" class="route-manual__input" list="startDatalist"
@@ -51,9 +46,6 @@
       <button type="button" id="finishRouteBtn" class="route-manual__btn">Завершить</button>
     </div>
 
-    <!-- Появляется только после "Построить маршрут"; на каждом этаже
-         показывает свой отрезок пути, "Дальше" переключает карту на
-         следующий этаж (через лестницу/лифт) сама. -->
     <div id="routeControls" class="route-controls" style="display:none;">
       <div class="route-controls__row">
         <button type="button" id="routePrevBtn">← Назад</button>

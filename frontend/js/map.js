@@ -61,10 +61,18 @@ const routeNextBtn = document.getElementById("routeNextBtn");
 // GRAPH_POINT_COLOR   — цвет точек коридора
 // GRAPH_DOOR_COLOR    — цвет точек-дверей
 // ROUTE_COLOR         — цвет линии маршрута
+// ROUTE_ANIM_SPEED    — скорость рисования линии маршрута (0 — без анимации)
 // FLOOR_CHANGE_COST   — «стоимость» одного пролёта между этажами
 const LABEL_FONT = window.MAP_FONT || "inherit";
 const SHOW_GRAPH_POINTS = window.SHOW_GRAPH_POINTS || false;
 const FLOOR_CHANGE_COST = window.FLOOR_CHANGE_COST || 120;
+
+// Скорость «рисования» линии маршрута, в единицах карты в секунду
+// (ширина карты — 1310). Больше — быстрее. 0 — без анимации.
+// Меняется через window.ROUTE_ANIM_SPEED в любом floor_N_data.js.
+const ROUTE_ANIM_SPEED = window.ROUTE_ANIM_SPEED ?? 500;
+const ROUTE_ANIM_MIN_MS = 300;   // даже короткий отрезок рисуется не мгновенно
+const ROUTE_ANIM_MAX_MS = 5000;  // и очень длинный не тянется бесконечно
 
 // Лифты временно не участвуют в переходах между этажами — маршрут идёт
 // только по лестницам. Чтобы включить лифты обратно, поставь false.
@@ -1007,14 +1015,44 @@ function applyHighlight() {
   });
 }
 
+// Рисует линию маршрута и плавно «прочерчивает» её от начала к концу
+// (через stroke-dashoffset). Без анимации линия появляется сразу — если
+// скорость 0, у пользователя включено «уменьшить движение» или браузер
+// не умеет Web Animations / getTotalLength.
 function drawRoutePolyline(points) {
   const svg = mapStage.querySelector(".floor-svg");
   if (!svg) return;
-  svg.querySelector(".route-path")?.remove();
-  svg.appendChild(createSvgEl("polyline", {
+  svg.querySelector(".route-path")?.remove(); // вместе с ним обрывается и старая анимация
+
+  const polyline = createSvgEl("polyline", {
     class: "route-path",
     points: points.map((p) => `${p.x},${p.y}`).join(" "),
-  }));
+  });
+  svg.appendChild(polyline);
+
+  animateRoutePath(polyline);
+}
+
+function animateRoutePath(polyline) {
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  if (!ROUTE_ANIM_SPEED || reduceMotion) return;
+  if (typeof polyline.animate !== "function" || typeof polyline.getTotalLength !== "function") return;
+
+  const length = polyline.getTotalLength();
+  if (!length) return;
+
+  const duration = Math.min(ROUTE_ANIM_MAX_MS, Math.max(ROUTE_ANIM_MIN_MS, (length / ROUTE_ANIM_SPEED) * 1000));
+
+  // один «штрих» длиной с всю линию, сдвинутый за начало — линию не видно;
+  // сдвиг до 0 постепенно открывает её
+  polyline.style.strokeDasharray = `${length}`;
+  const animation = polyline.animate(
+    [{ strokeDashoffset: length }, { strokeDashoffset: 0 }],
+    { duration, easing: "linear" }
+  );
+  animation.onfinish = () => {
+    polyline.style.strokeDasharray = ""; // дальше обычная сплошная линия
+  };
 }
 
 function clearRoutePolyline() {

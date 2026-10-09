@@ -1443,4 +1443,4 @@ finishRouteBtn?.addEventListener("click", () => {
 // ---- Запуск ----
 populateRoomInputs();
 renderFloor(1);
-updateFinishButtonState(); // маршрута ещё нет — «Завершить» сразу неактивна
+updateFinishButtonState();

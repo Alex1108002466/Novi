@@ -24,7 +24,7 @@ window.GRAPH_POINT_COLOR = "#ff9900"; // цвет точек коридора
 window.GRAPH_DOOR_COLOR = "#00ff11";  // цвет точек-дверей кабинетов
 window.ROUTE_COLOR = "#e23626"; // цвет линии построенного маршрута (Дейкстра)
 
-
+window.ROUTE_ANIM_SPEED = 400;
 
 window.FLOORS[1] = {
 
